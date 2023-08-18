@@ -77,7 +77,7 @@ def init_app():
     enteros y devuelva el resultado de la operación como respuesta a la petición. El parámetro 
     de ruta operation indica la operación que se desea realizar, y puede tomar los siguientes 
     valores:  """
-    #/operate/<string:operation>/<int:num1>/<int:num2>
+    
     @app.route('/operate/<string:operation>/<int:num1>/<int:num2>')
     def operaciones(operation, num1, num2):
         opcion_equivo = True
@@ -110,10 +110,12 @@ def init_app():
     de parámetros de ruta como veíamos en el ejercicio 6."""
     
     @app.route('/operate1')
-    def operaciones():
+    def operaciones1(**args):
         operation = request.args["operacion"]
-        num1 = request.args["num1"]
-        num2 = request.args["num2"]
+        numero1 = request.args["num1"]
+        numero2 = request.args["num2"]
+        num1 = int(numero1)
+        num2 = int(numero2)
         opcion_equivo = True
         if operation == 'sum':
             result = num1 + num2
