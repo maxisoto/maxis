@@ -1,4 +1,5 @@
 from flask import Flask
+from flask import request
 from config import Config
 import datetime
 
@@ -77,7 +78,7 @@ def init_app():
     de ruta operation indica la operación que se desea realizar, y puede tomar los siguientes 
     valores:  """
     #/operate/<string:operation>/<int:num1>/<int:num2>
-    @app.route('/operate?operation=sum&num1=10&num2=20')
+    @app.route('/operate/<string:operation>/<int:num1>/<int:num2>')
     def operaciones(operation, num1, num2):
         opcion_equivo = True
         if operation == 'sum':
@@ -107,6 +108,35 @@ def init_app():
     Reformular el ejercicio anterior para el endpoint /operate, con la diferencia que esta ruta
     deberá recibir parámetros de consulta (query params) operation, num1 y num2 en lugar
     de parámetros de ruta como veíamos en el ejercicio 6."""
+    
+    @app.route('/operate1')
+    def operaciones():
+        operation = request.args["operacion"]
+        num1 = request.args["num1"]
+        num2 = request.args["num2"]
+        opcion_equivo = True
+        if operation == 'sum':
+            result = num1 + num2
+            opcion_equivo = False
+            return f'El resultado de la {operation} es : {result}'
+        elif operation == 'sub':
+            result = num1 - num2
+            opcion_equivo = False
+            return f'El resultado de la {operation} es : {result}'
+        elif operation == 'mult':
+            result = num1 * num2
+            opcion_equivo = False
+            return f'El resultado de la {operation} es : {result}'
+        elif operation == 'div':
+            if num2 == 0:
+                return Config.error_divi
+            else:
+                result = num1/num2
+                opcion_equivo = False
+                return f'El resultado de la {operation} es : {result}'
+        if opcion_equivo:
+            error_exist = Config.error_existencia
+            return error_exist    
     
     
 
