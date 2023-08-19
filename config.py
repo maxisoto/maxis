@@ -15,8 +15,13 @@ class Config:
                         {'nombre': 'James',
                          'apellido': 'Hetfield'
                         }],'version': '1.0.0'}
-    #Ejercicio 5
-    EJERCICIO5 = {'erro_fecha': 'ud ingreso una fecha posterior a la fecha actual...'}
+    #MSJ error Ejercicio 5
+    ERROR5 = {'Error_fecha': 'Ud ha ingresado una fecha posterior a la fecha actual...'}
     #ejercicio 6 y 7
-    error_divi = {'Error' : 'La divicion no esta preparada para esos valores.'}
-    error_existencia = {'Error': 'No existe ruta definida para ese enpoint'}
+    ERROR6 = {'Error_operacion': 'No existe ruta definida para ese enpoint'}
+    POSSIBLE_OPERATIONS = {'Error_operacion': 'No existe ruta definida para ese enpoint',
+                        'Operaciones Posbiles':'A continuacion se detallan el listado de operciones habilitadas',
+                        'sum':'Para sumar de dos numeros A+B=C',
+                        'sub': 'Para restar dos numeros A-B=C',
+                        'mult': 'Para multiplicar dos numeros AxB=C',
+                        'div': 'Para restar dos numeros A/B=C, tener en cuenta que no esta permitida la division por cero',}
