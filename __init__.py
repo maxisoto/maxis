@@ -2,6 +2,7 @@ from flask import Flask
 from flask import request
 from config import Config
 import datetime
+import json
 
 def init_app():
     """Crea y configura la aplicación Flask"""
@@ -186,6 +187,87 @@ def init_app():
             return {'formatted_word': titulo}, 400
         except TypeError:
             return {'Error_operacion': 'No existe ruta definida para ese enpoint'}, 400
+        
+
+    # Ejercicio 9 
+    # Para en el endpoint /formatted/<string:dni> se necesita implementar una función que reciba como parámetro de ruta un DNI, y 
+    # devuelva el DNI convertido a un entero. El parámetro de ruta recibido puede contar con las siguientes características a 
+    # ser tenidas en cuenta para la conversión: 
+    # 1. El DNI siempre tendrá 8 caracteres numéricos en la cadena recibida. Por ejemplo, 23456007, 23.456.007, 23-456-007, 00023456, etc. 
+    # 2. El DNI puede contener puntos (.) como separador de miles. 
+    # 3. El DNI puede contener guiones (-) como separador de miles. 
+    # 4. El DNI puede tener ceros a la izquierda. Por ejemplo, 00023456. En este caso el DNI no se considera válido, por lo que 
+    # se deberá devolver un mensaje de error en la respuesta. 
+
+    # La respuesta a una petición debe tener formato JSON, donde el DNI formateado estará asociado a la clave formatted_dni.
+    # Por ejemplo, para la petición /formatted/23.456.007 devolverá: 
+    # { "formatted_dni": 23456007 
+    # }
     
+
+    @app.route('/formatted/<string:dni>')
+    def formato_dni(dni):
+        try:
+            cadena = dni
+            lista = []
+            for i in cadena:
+                if i.isnumeric() and len(lista) < 8:
+                    lista.append(i)                   
+                dni_posta = ''.join(lista)            
+            print(dni_posta)
+            return {'formatted_dni': dni_posta}, 400
+        except TypeError:
+            return {'Error_operacion': 'No existe ruta definida para ese enpoint'}, 400
+        
+
+    # Ejercicio 10
+    @app.route('/format')
+    def ejercicio10():
+        ErrorDNI = False
+        ErrorEdad = False
+        nombre = request.args.get('firstname')
+        nombre = nombre.title()
+        apellido = request.args.get('lastname')
+        apellido = apellido.title()
+        fecha_nac = request.args.get('dob')
+        dni = request.args.get('dni')
+
+        """calculo de edad"""
+        hoy = datetime.datetime.now()
+        anio = datetime.datetime.strptime(fecha_nac, '%Y-%m-%d')
+        if anio > hoy:
+            ErrorEdad = True
+        else:
+            edad = hoy.year - anio.year
+    
+        """verificar dni"""
+        cadena = dni
+        lista = []
+        for i in cadena:
+            if i.isnumeric() and len(lista) < 8:
+                lista.append(i)
+        if len(lista)==8:
+            dni_posta = ''.join(lista)
+        else:
+            ErrorDNI = True
+
+        """SALIDA A MOSTRAR"""
+        if ErrorDNI == False:
+            if ErrorEdad == False:
+                salida = { 
+                    'firstname': f'{nombre}',
+                    'lastname': f'{apellido}',
+                    'age': f'{edad}',
+                    'dni': f'{dni_posta}'
+                }
+            else:
+                salida = {'Error_fecha': 'Ud ha ingresado una fecha posterior a la fecha actual...'}
+                
+        else:
+            salida =  {'Error_DNI': 'El DNI no tiene la extension correcta'}           
+       
+        return salida   
+
+
     return app
 
